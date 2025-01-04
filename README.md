@@ -81,6 +81,50 @@ HTML
                 const result = num1 * num2;
                 document.getElementById('result').innerText = The result is: ${result};
             } else {
+
+
+
+            const { Builder, By, until } = require('selenium-webdriver');
+const path = require('path');
+require('chromedriver'); // WebDriver Manager will handle ChromeDriver setup automatically.
+
+(async function testMultiplicationApp() {
+    // Initialize the Chrome WebDriver
+    let driver = await new Builder().forBrowser('chrome').build();
+
+    try {
+        // Open the local HTML file in the browser
+        const filePath = path.resolve(__dirname, 'index.html');
+        await driver.get(file://${filePath});
+
+        // Wait for the first input field to be present before interacting
+        await driver.wait(until.elementLocated(By.id('num1')), 1000);
+        await driver.findElement(By.id('num1')).sendKeys('4');  // Entering the first number
+
+        // Wait for the second input field to be present before interacting
+        await driver.wait(until.elementLocated(By.id('num2')), 1000);
+        await driver.findElement(By.id('num2')).sendKeys('5');  // Entering the second number
+
+        // Wait for the "Multiply Numbers" button to be clickable before clicking
+        await driver.wait(until.elementIsVisible(driver.findElement(By.id('multiplyButton'))), 1000);
+        await driver.findElement(By.id('multiplyButton')).click();  // Click the "Multiply Numbers" button
+
+        // Wait for the result to be displayed
+        await driver.wait(until.elementLocated(By.id('result')), 1000);
+
+        // Retrieve the result text
+        const resultText = await driver.findElement(By.id('result')).getText();
+
+        // Verify the result and log the outcome
+        if (resultText === "The result is: 20") {
+            console.log("Test Passed: 4 * 5 = 20");
+        } else {
+            console.log("Test Failed: Expected 'The result is: 20', but got " + resultText);
+        }
+    } finally {
+        await driver.quit(); // Close the browser
+    }
+})();
                 document.getElementById('result').innerText = "Please enter valid numbers.";
             }
         });
